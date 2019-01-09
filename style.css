@@ -77,3 +77,8 @@ h1{
     background-size: cover;
     background-repeat: no-repeat;
 }
+.boss{
+	position:fixed;
+	bottom:0;
+	right:20%;
+}

@@ -43,6 +43,7 @@ let endBoss = function (){
 	witchBoss.souls = 3
 			
 }
+endBoss()
 
 
 //button selector which starts the game
@@ -50,19 +51,21 @@ let endBoss = function (){
 let mageFireBall = function() {
     if (enemy.health > 0) {
         enemy.health -= hero.attack
-        $('.gameBar').append(`<li class="gameStats">Skeleton knight 1 has ${enemy.health}</li>`)
+        $('.enemyGameStats').remove()
+        $('.gameBar').append(`<li class="enemyGameStats">Skeleton knight 1 has ${enemy.health}</li>`)
         if (enemy.health <= 0) {
             $('.skeleton').replaceWith('<img src="./fireDeath.gif" class="skeleton">')
-            $('.gameStats').remove()
+            $('.enemyGameStats').remove()
             hero.souls = hero.souls + enemy.souls
-            $('.gameBar').append(`<li>You have ${hero.souls} souls</li>`)
+            $('.gameBar').append(`<li class="soulsCount">You have ${hero.souls} souls</li>`)
             if (enemy.health <= 0 && enemy2.health <= 0 && roundCounter === 0) {
+                $('.gameStats').remove()
                 upgradeChoices()
                 roundCounter+=1
             }
         } else {
             skeletonAttack()
-            skeletonAttack()
+            
         }
     }
 }
@@ -73,28 +76,80 @@ let mageFireBall = function() {
 let mageFireBall2 = function() {
     if (enemy2.health > 0) {
         enemy2.health -= hero.attack
-        $('.gameBar').append(`<li class="gameStats2">Skeleton knight 2 has ${enemy2.health}</li>`)
+        $('.enemyGameStats2').remove()
+        $('.gameBar').append(`<li class="enemyGameStats2">Skeleton knight 2 has ${enemy2.health}</li>`)
         if (enemy2.health <= 0) {
             $('.skeleton2').replaceWith('<img src="./fireDeath.gif" class="skeleton2">')
-            $('.gameStats2').remove()
+            $('.enemyGameStats2').remove()
             hero.souls = hero.souls + enemy2.souls
-            $('.gameBar').append(`<li>You have ${hero.souls} souls</li>`)
+            $('.gameBar').append(`<li class="soulsCount">You have ${hero.souls} souls</li>`)
             if (enemy.health <= 0 && enemy2.health <= 0 && roundCounter === 0) {
+                $('.gameStats').remove()
                 upgradeChoices()
+                roundCounter+=1
+                
+
             }
         } else {
             skeletonAttack()
-            skeletonAttack()
+            
         }
     }
 }
+let bossFireBall = function(){
+		if (witchBoss.health > 0) {
+				$('.gameStats3').remove()
+		        witchBoss.health -= (hero.attack-2)
+		        $('.gameBar').append(`<li class="gameStats3">${witchBoss.name} has ${witchBoss.health}</li>`)
+		        if (witchBoss.health <= 0) {
+		            $('.boss').replaceWith('<img src="./fireDeath.gif" class="boss">')
+		            $('.gameStats3').remove()
+		            $('.soulsCount').remove()
+		            hero.souls = hero.souls + witchBoss.souls
+		            $('.gameBar').append(`<li>You have ${hero.souls} souls</li>`)
+		            setTimeout(function(){
+		            	$('.gameBar').replaceWith('<h1 style="color:gold;">WINNER!!!!!!</h1><button id="restart">Restart</button>')
+		            		document.getElementById("restart").onclick = function() {
+		            		window.location.href = "./index.html"
+		            	}},3000)
+		            	
+		            
+
+		        } else if( witchBoss.health >0 && enemy.health >0 || enemy2.health> 0) {
+		            skeletonAttack()
+		            bossAttack()
+		        } else {
+		        	bossAttack()
+		        }
+		    }
+}
+let bossAttack = function(){
+	
+	if (witchBoss.health > 0){
+		hero.health -= witchBoss.attack 
+		$('.gameStats').remove()
+		$('.gameBar').append(`<li class="gameStats">${hero.name} has ${hero.health}</li>`)
+}
+}
+
 
 let skeletonAttack = function() {
-    if (enemy.health > 0) {
+	if(enemy.health >0 && enemy2.health >0){
+	$('.gameStats').remove()
+	$('.gameStats2').remove()
+    hero.health -= enemy.attack
+    hero.health -= enemy2.attack
+    $('.gameBar').append(`<li class="gameStats">${hero.name} has ${hero.health}</li>`)
+    }else if(enemy.health >0 || enemy2.health >0){
+    	$('.gameStats').remove()
+		$('.gameStats2').remove()
         hero.health -= enemy.attack
         $('.gameBar').append(`<li class="gameStats">${hero.name} has ${hero.health}</li>`)
+    } else {
+    	$('.gameStats').remove()
     }
 }
+
 let mageheal = function() {
     hero.health = 50
     console.log(hero.health)
@@ -107,9 +162,10 @@ let mageAttackUpgrade = function() {
 
 
 let boss = function() {
-    $('section').replaceWith('<body><section class="final"><h1>Time to do battle</h1><ul class="gameBar"><li class="immune">THIS IS YOUR STATUS BAR</li></ul><img src="./wizard.gif" class="wizard"><img src="./skeleton.gif" class="skeleton"><img src="./skeleton.gif" class="skeleton2"></section></body>')
+    $('section').replaceWith('<body><section class="final"><h1>Time to do battle</h1><ul class="gameBar"><li class="immune">THIS IS YOUR STATUS BAR</li></ul><img src="./wizard.gif" class="wizard"><img src="./skeleton.gif" class="skeleton"><img src="./skeleton.gif" class="skeleton2"><img src="./boss.gif" class="boss"></section></body>')
     $('.skeleton').click(mageFireBall)
     $('.skeleton2').click(mageFireBall2)
+    $('.boss').click(bossFireBall)
     enemyGenerator()
 
 }
