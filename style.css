@@ -19,10 +19,11 @@
 }
 
 button {
+    background-image: url("buttonback.png");
     width: 100px;
     height: 100px;
     margin: 25px;
-    color: blue;
+    color: white;
 }
 
 p {
