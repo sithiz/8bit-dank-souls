@@ -35,7 +35,7 @@ p {
 	position: fixed;
     min-width: 100%;
     min-height: 100%;
-    background-image: url('./inside1.jpeg');
+    background-image: url('./inside1.jpg');
     background-size: cover;
     background-repeat: no-repeat;
 }
@@ -46,7 +46,7 @@ h1{
 	font-size: 50px;
 }
 
-.wizard{
+.hero{
 	position:fixed;
 	bottom:0;
 	left:0;
@@ -82,4 +82,12 @@ h1{
 	position:fixed;
 	bottom:0;
 	right:20%;
+}
+.playerDead{
+    position: fixed;
+    min-width: 100%;
+    min-height: 100%;
+    background-image: url('./charDeath.gif');
+    background-size: cover;
+    background-repeat: no-repeat;
 }
