@@ -1,3 +1,6 @@
+html{
+    font-family: Almendra-Regular;
+}
 #bg {
     position: fixed;
     min-width: 100%;
@@ -17,15 +20,34 @@
     right: 50%;
     bottom: 20%;
 }
-
+.torch1{
+    position:fixed;
+    top:5%;
+    left:10%;
+}
+.torch2{
+    position:fixed;
+    top:5%;
+    right:10%;
+}
 button {
+    font-family: Almendra;
     background-image: url("buttonback.png");
     width: 100px;
     height: 100px;
     margin: 25px;
     color: white;
 }
-
+#button1{
+    position:fixed;
+    left:25%;
+    bottom:10%;
+}
+#button2{
+    position:fixed;
+    right:25%;
+    bottom:10%;
+}
 p {
     color: white;
     text-align: center;
