@@ -11,10 +11,12 @@ class Character {
 
 }
 
-
+let multiPlayerGame = false
 let roundCounter = 0
 let villians = []
 let heros = []
+let gameSouls = 0
+
 let createMage = function() {
     let mage = new Character
     mage.name = 'wizard'
@@ -61,38 +63,51 @@ let endBoss = function() {
 }
 endBoss()
 
-console.log(heros, villians)
-
-
-
-
 let v1 = villians[0]
 let v2 = villians[1]
 let b1 = villians[2]
 
-
-
-
-let attack = function(target) {
-    if (target.health > 0) {
-        target.health -= h1.attack
-        $('.enemyGameStats').remove()
-        $('.gameBar').append(`<li class="enemyGameStats">${target.name} has ${target.health}</li>`)
-        if (target.health <= 0) {
+let attack = function(target, hero) {
+    if (multiPlayerGame === false) {
+        if (target.health > 0) {
+            target.health -= h1.attack
             $('.enemyGameStats').remove()
+            $('.gameBar').append(`<li class="enemyGameStats">${target.name} has ${target.health}</li>`)
+            if (target.health <= 0) {
+                $('.enemyGameStats').remove()
+                $('.soulsCount').remove()
+                h1.souls = h1.souls + target.souls
+                $('.gameBar').append(`<li class="soulsCount">${h1.name} has ${h1.souls} souls</li>`)
+                $('.soulsCount').replaceWith(`<li class="soulsCount">${h1.name} has ${h1.souls} souls</li>`)
+            }
+        }
+
+    } else {
+        if (target.health > 0) {
+            target.health -= hero.attack
+            $('.health').remove()
             $('.soulsCount').remove()
-            h1.souls = h1.souls + target.souls
-            $('.gameBar').append(`<li class="soulsCount">${h1.name} has ${h1.souls} souls</li>`)
-            $('.soulsCount').replaceWith(`<li class="soulsCount">${h1.name} has ${h1.souls} souls</li>`)
+            $('.enemyGameStats').remove()
+            $('.gameBar').append(`<li class="enemyGameStats">${target.name} has ${target.health}</li>`)
+            if (target.health <= 0) {
+                $('.enemyGameStats').remove()
+                $('.atk').remove()
+                $('.heal').remove()
+                $('.atk2').remove()
+                $('.heal2').remove()
+                $('.gameBar').replaceWith(`<h1 style="color:gold;">WINNER IS ${hero.name}</h1><button id="restart">Restart</button>`)
+                document.getElementById("restart").onclick = function() {
+                        window.location.href = "./index.html"
+                    }
+            }   
         }
     }
 }
 
 let bossHeroAttack = function(target, target2, bigboss) {
-    if (target.health <= 0 && target2.health <= 0){
+    if (target.health <= 0 && target2.health <= 0) {
         if (bigboss.health > 0) {
             $('.gameStats3').remove()
-            console.log(heros,villians)
             bigboss.health -= (h1.attack - 2)
             $('.gameBar').append(`<li class="gameStats3">${bigboss.name} has ${bigboss.health}</li>`)
 
@@ -109,7 +124,6 @@ let bossAttack = function(bigboss) {
     }
 }
 
-
 let skeletonAttack = function(target, target2) {
     if (target.health > 0 && target2.health > 0) {
         $('.gameStats').remove()
@@ -124,21 +138,18 @@ let skeletonAttack = function(target, target2) {
 }
 
 let roundCheck = function() {
-    console.log(v1.health, v2.health, roundCounter)
     if (roundCounter === 0 && v1.health <= 0 && v2.health <= 0) {
         $('.gameStats').remove()
         villians.shift()
         villians.shift()
         villians.shift()
         upgradeChoices()
-        console.log(villians)
         roundCounter += 1
         enemyGenerator()
         endBoss()
 
 
     } else if (h1.health <= 0) {
-        console.log('hello')
         setTimeout(function() {
             $('.title').remove()
             $('.hero').remove()
@@ -152,23 +163,44 @@ let roundCheck = function() {
 
 }
 
-let heal = function() {
-    if (h1.souls === 2) {
-        $('.gameStats').remove()
-        if (h1.key === 0) {
-            h1.health = 50
+let heal = function(target) {
+    if (multiPlayer = false) {
+        if (h1.souls === 2) {
+            $('.gameStats').remove()
+            if (h1.key === 0) {
+                h1.health = 50
+            } else {
+                h1.health = 75
+            }
+            $('.gameBar').append(`<li class="gameStats">${h1.name} has been healed back to ${h1.health}</li>`)
+            h1.souls -= 1
+            $('.soulsCount').remove()
+            $('.gameBar').append(`<li class="gameStats">${h1.name} has ${h1.souls} souls left</li>`)
         } else {
-            h1.health = 75
+            $('.soulsCount').remove()
+            $('.gameBar').append(`<li class="soulsCount">${h1.name} does not have enough souls</li>`)
         }
-        $('.gameBar').append(`<li class="gameStats">${h1.name} has been healed back to ${h1.health}`)
-        h1.souls -= 1
-        $('.soulsCount').remove()
-        $('.gameBar').append(`<li class="gameStats">${h1.name} has ${h1.souls} souls left</li>`)
     } else {
-        $('.soulsCount').remove()
-        $('.gameBar').append(`<li class="soulsCount">${h1.name} does not have enough souls</li>`)
+        if (target.souls >= 1) {
+            $('.health').remove()
+            if (target.key === 0) {
+                target.health = 50
+            } else {
+                target.health = 75
+            }
+            $('.gameBar').append(`<li class="health">${target.name} has ${target.health}</li>`)
+            target.souls -= 1
+            $('.soulsCount').remove()
+            $('.gameBar').append(`<li class="soulsCount">${target.name} has ${target.souls} souls left</li>`)
+        } else {
+            $('.soulsCount').remove()
+            $('.gameBar').append(`<li class="soulsCount">${target.name} does not have enough souls</li>`)
+        }
     }
 }
+
+
+
 
 let AttackUpgrade = function() {
     if (h1.souls >= 1) {
@@ -220,7 +252,6 @@ let gameStart = function() {
         b1 = villians[2]
         h1 = heros[0]
 
-        console.log($('.inside'))
         $('.inside').replaceWith('<body><section class="final"><h1 class="title">Time to do battle</h1><ul class="gameBar"><li class="immune">THIS IS YOUR STATUS BAR</li></ul><img src="./skeleton.gif" class="skeleton"><img src="./skeleton.gif" class="skeleton2"><img src="./boss.gif" class="boss"></section></body>')
         if (h1.key === 0) {
             $('.final').after('<img src="./wizard.gif" class="hero">')
@@ -261,6 +292,7 @@ let gameStart = function() {
                     $('.gameBar').replaceWith('<h1 style="color:gold;">WINNER!!!!!!</h1><button id="restart">Restart</button>')
                     document.getElementById("restart").onclick = function() {
                         window.location.href = "./index.html"
+
                     }
                 }, 3000)
             } else {
@@ -274,10 +306,68 @@ let gameStart = function() {
 
 }
 
+let multiPlayer = function() {
+    multiPlayerGame = true
+    h1 = heros[0]
+    h2 = heros[1]
+    h1.souls = 1
+    h2.souls = 1
+    console.log(heros)
+    $('body').replaceWith('<body><section class="inside"><h1>Time to do battle</h1><ul class="gameBar"><li class="immune">THIS IS YOUR STATUS BAR</li></ul></section></body>')
+    $('.gameBar').after('<button type="button" class="atk">Attack</button>')
+            .after('<button type="button" class="heal">heal</button>')
+            .after('<button type="button" class="atk2">Attack</button>')
+            .after('<button type="button" class="heal2">heal</button>')
+            .after('<img src="./wizard.gif" class="hero">')
+            .after('<img src="./warrior.gif" class="skeleton">')
+    roundButtons()
+    $('.atk').click(function() {
+        attack(h2, h1)
+        roundCounter += 1
+        console.log(roundCounter)
+        roundButtons()
+    })
+    $('.heal').click(function() {
+        heal(h1)
+        roundCounter += 1
+        roundButtons()
+    })
+    $('.atk2').click(function() {
+        attack(h1, h2)
+        roundCounter -= 1
+        roundButtons()
+    })
+    $('.heal2').click(function() {
+        heal(h2)
+        roundCounter -= 1
+        roundButtons()
+    })
+
+}
+
+
+let roundButtons = function() {
+    if (roundCounter === 0) {
+        $('.gameStats').remove()
+        $('.atk').show()
+        $('.heal').show()
+        $('.atk2').hide()
+        $('.heal2').hide()
+        $('.gameBar').append(`<li class="gameStats">${h1.name} has the attack`)
+           
+    } else {
+        $('.gameStats').remove()
+        $('.atk2').show()
+        $('.heal2').show()
+        $('.atk').hide()
+        $('.heal').hide()
+        $('.gameBar').append(`<li class="gameStats">${h2.name} has the attack`)
+    }
+}
 let upgradeChoices = function() {
     $('.gameBar').after('<button type="button" class="nxt">BOSS FIGHT</button>')
-    $('.gameBar').after('<button type="button" class="atk">Attack++</button>')
-    $('.gameBar').after('<button type="button" class="heal">Heal</button>')
+        .after('<button type="button" class="atk">Attack++</button>')
+        .after('<button type="button" class="heal">Heal</button>')
     $('.nxt').click(gameStart)
     $('.atk').click(AttackUpgrade)
     $('.heal').click(heal)
@@ -292,5 +382,8 @@ $('.warrior_start').click(function() {
     gameStart()
 })
 
-console.log(villians)
-console.log(roundCounter)
+$('#multiple').click(function() {
+    createMage()
+    createWarrior()
+    multiPlayer()
+})

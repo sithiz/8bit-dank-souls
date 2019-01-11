@@ -40,14 +40,28 @@ button {
 }
 #button1{
     position:fixed;
-    left:25%;
+    left:20%;
     bottom:10%;
 }
 #button2{
     position:fixed;
-    right:25%;
+    left:40%;
     bottom:10%;
 }
+#multiple{
+    position: fixed;
+    left:60%;
+    bottom:10%;
+}
+.heal2{
+    position:fixed;
+    right:10%;
+}
+.atk2{
+    position: fixed;
+    right:20%;
+}
+
 p {
     color: white;
     text-align: center;
